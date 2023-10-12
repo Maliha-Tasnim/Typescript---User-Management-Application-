@@ -6,9 +6,10 @@ This is an user management application where CRUD functionalities are used to ha
 ##  Importing Packages  <a id=section2></a>
 
 To build the UI of this project bootstrap, rsuit react library, and react-icons/fa which is font awsome libraries are used.
-Link1: https://react-bootstrap.netlify.app/getting-started/introduction, 
-Link2: https://rsuitejs.com/
-Link3: https://react-icons.github.io/react-icons
+
+1. https://react-bootstrap.netlify.app/getting-started/introduction, 
+2. https://rsuitejs.com/
+3. https://react-icons.github.io/react-icons
 
 ## UI Model and functionality<a id=section3></a>
 
@@ -32,7 +33,7 @@ Switch toggle button is by deafult active which means we can easily create user 
 
 Initially created basic form which contain inputs, selectbox, number, dropdown fields. If you click on edit button on particular field, it will pop up same modal and show the details to update. Same form hadle conditionally to create and update form also change button text conditionally like submit and update.
 
-### validation<a id=section306></a>
+### Validation<a id=section306></a>
 
 Required field on the name input: This will prevent the form from being submitted if the name input is empty.
 Disable submit button if value is null in the field: This will disable the submit button if the name input is empty.
