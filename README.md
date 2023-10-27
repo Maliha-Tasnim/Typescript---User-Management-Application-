@@ -5,10 +5,13 @@ This is a simple user management application where CRUD functionalities are used
 
 ##  Importing Packages  <a id=section2></a>
 
-To build the UI of this project bootstrap, rsuit react library, and react-icons/fa which is font awsome libraries are used.
-Link1: https://react-bootstrap.netlify.app/getting-started/introduction, 
-Link2: https://rsuitejs.com/
-Link3: https://react-icons.github.io/react-icons
+To build the UI of this project, we used the following libraries:
+
+⚫ Bootstrap
+
+⚫ React Suite
+
+⚫ React Icons/Font Awesome
 
 ## UI Model and functionality<a id=section3></a>
 
@@ -36,4 +39,5 @@ I created a basic form with inputs, select boxes, number fields, and dropdown fi
 ### Validation<a id=section306></a>
 
 ⚫ Required field on the name input: This prevents the form from being submitted if the name input is empty.
+
 ⚫ Disable submit button if value is null in the field: This disables the submit button if the name input is empty.
