@@ -1,84 +1,95 @@
 import React, { useState } from "react";
-import { Button, Card, Col, Container, Form, Modal, Row, Table } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Modal,
+  Row,
+  Table,
+} from "react-bootstrap";
 import { Toggle } from "rsuite";
+import "../App.css";
 import { FaPencilAlt, FaPlus, FaTrashAlt } from "react-icons/fa";
 import { User } from "./Interface";
 
-const defaultUsers: User[] = [
-  {
-    id: 1,
-    name: "Maliha",
-    address: "Tasnim",
-    age: "26",
-    profession: "Software Engineer",
-    interestRate: "4",
-  },
-  {
-    id: 2,
-    name: "Fahim",
-    address: "Riaz",
-    age: "24",
-    profession: "Software Engineer",
-    interestRate: "5",
-  },
-];
+export const Menu = () => {
+  const defaultUsers   = [
+    {
+      id: 1,
+      name: "Maliha",
+      address: "Finland",
+      age: "26",
+      profession: "Software Engineer",
+      interestRate: "8",
+    },
+    {
+      id: 2,
+      name: "Fahim",
+      address: "UK",
+      age: "25",
+      profession: "Manager",
+      interestRate: "9",
+    },
+  ];
 
-const initialUser: User = {
-  id: 0, // or 0 if you want to initialize with a specific number
-  name: "",
-  address: "",
-  age: "", 
-  profession: "",
-  interestRate: "", 
-};
-
-const Menu = () => {
-  const [users, setUsers] = useState(defaultUsers);
-  const [show, setShow] = useState(false);
-  const [newUser, setNewUser] = useState(initialUser);
-  const [showCreateBtn, setShowCreateBtn] = useState(true);
-  const [editing, setEditing] = useState(false);
-  const rates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-  const handleClose = () => {
-    setShow(false);
+  const initCurrentUser = {
+    id: null,
+    name: "",
+    address: "",
+    age: "",
+    profession: "",
+    interestRate: "",
   };
 
+  const [users, setUsers] = useState(defaultUsers);
+  const [show, setShow] = useState(false);
+  const [newUser, setNewUser] = useState(initCurrentUser);
+  const [showCreateBtn, setShowCreateBtn] = useState(true);
+  const [editing, setEdit] = useState(false);
+  const [rates] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+  const handleClose = () => {
+    setShow(false);   
+  };
   const handleShow = () => {
     setShow(true);
-    if (!editing) {
-      setNewUser(initialUser);
+    if(editing === false) {
+      setNewUser(initCurrentUser);
     }
   };
 
-  const onFormSubmit = (newUser: User) => {
+  const onFormSubmit = (newUser: any) => {
     const id = users.length + 1;
     setUsers([...users, { ...newUser, id }]);
-    handleClose();
   };
 
-  const onEdit = (user: User) => {
-    setEditing(true);
-    setNewUser(user);
-    handleShow();
+  const onEdit = (newUser: any) => {
+    setEdit(true);
+    if(editing === true) {
+      setNewUser({ ...newUser, newUser });
+      handleShow();
+    }
+    
   };
 
-  const onSubmit = (newUser: User) => {
-    if (editing) {
+  const onSubmit = (newUser: any) => {
+    if (editing === true) {
       onUpdateUser(newUser);
     } else {
       onFormSubmit(newUser);
     }
   };
 
-  const onUpdateUser = (updatedUser: User) => {
-    setEditing(false);
-    setUsers((prevUsers) => prevUsers.map((user) => (user.id === updatedUser.id ? updatedUser : user)));
-    handleClose();
+  const onUpdateUser = (newUser: User) => {
+    setEdit(false);
+    let id = newUser.id;
+    setUsers(users.map((i) => (i.id === id ? newUser : i)));
   };
 
-  const onDeleteUser = (user: User) => {
-    setUsers((prevUsers) => prevUsers.filter((u) => u.id !== user.id));
+  const onDeleteUser = (currentUser: User) => {
+    setUsers(users.filter((i) => i.id !== currentUser.id));
   };
 
   return (
@@ -89,22 +100,31 @@ const Menu = () => {
             <Card.Body>
               <div className="d-flex justify-content-between customCardBody">
                 <div>
-                  <Card.Title>User Data</Card.Title>
+                  <Card.Title><h1>User Data</h1></Card.Title>
                 </div>
                 <div className="d-flex">
                   <Toggle
                     className="userToggleBtn"
                     checked={showCreateBtn}
-                    onClick={() => setShowCreateBtn(!showCreateBtn)}
+                    onClick={(e: any) => {
+                      e.preventDefault();
+                      setShowCreateBtn(!showCreateBtn);
+                    }}
                   />
-                  {showCreateBtn && (
-                    <Button variant="primary" onClick={handleShow} title="Add User">
+                  {showCreateBtn ? (
+                    <Button
+                      variant="primary"
+                      onClick={handleShow}
+                      title="Add User"
+                    >
                       <FaPlus />
                     </Button>
+                  ) : (
+                    ""
                   )}
                 </div>
               </div>
-              <Table striped bordered hover variant="dark">
+              <Table striped bordered hover variant="success">
                 <thead>
                   <tr>
                     <th>#</th>
@@ -118,8 +138,8 @@ const Menu = () => {
                 </thead>
                 <tbody>
                   {users.length > 0 ? (
-                    users.map((user) => (
-                      <tr key={user.id}>
+                    users.map((user, index) => (
+                      <tr key={index}>
                         <td>{user.id}</td>
                         <td>{user.name}</td>
                         <td>{user.address}</td>
@@ -127,10 +147,18 @@ const Menu = () => {
                         <td>{user.profession}</td>
                         <td>{user.interestRate}</td>
                         <td>
-                          <Button variant="info" title="Edit user details" onClick={() => onEdit(user)}>
+                          <Button
+                            variant="info"
+                            title="Edit user details"
+                            onClick={() => onEdit(user)}
+                          >
                             <FaPencilAlt />
                           </Button>{" "}
-                          <Button variant="danger" title="Delete user" onClick={() => onDeleteUser(user)}>
+                          <Button
+                            variant="danger"
+                            title="Delete user"
+                            onClick={() => onDeleteUser(user)}
+                          >
                             <FaTrashAlt />
                           </Button>
                         </td>
@@ -156,7 +184,11 @@ const Menu = () => {
               }}
             >
               <Modal.Header closeButton>
-                <Modal.Title>{editing ? "Edit User" : "Add User"}</Modal.Title>
+                {
+                  editing === true 
+                  ? <Modal.Title>Edit User</Modal.Title>
+                  : <Modal.Title>Add User</Modal.Title>
+                }
               </Modal.Header>
               <Modal.Body>
                 <Form.Group className="mb-3" controlId="formBasicName">
@@ -165,7 +197,9 @@ const Menu = () => {
                     type="text"
                     value={newUser.name}
                     required
-                    onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                    onChange={(e) =>
+                      setNewUser({ ...newUser, name: e.target.value })
+                    }
                     placeholder="Enter Name"
                   />
                 </Form.Group>
@@ -174,7 +208,9 @@ const Menu = () => {
                   <Form.Control
                     type="text"
                     value={newUser.address}
-                    onChange={(e) => setNewUser({ ...newUser, address: e.target.value })}
+                    onChange={(e) =>
+                      setNewUser({ ...newUser, address: e.target.value })
+                    }
                     placeholder="Enter Address"
                   />
                 </Form.Group>
@@ -183,7 +219,9 @@ const Menu = () => {
                   <Form.Control
                     type="number"
                     value={newUser.age}
-                    onChange={(e) => setNewUser({ ...newUser, age: e.target.value })}
+                    onChange={(e) =>
+                      setNewUser({ ...newUser, age: e.target.value })
+                    }
                     placeholder="Enter Age"
                   />
                 </Form.Group>
@@ -192,7 +230,9 @@ const Menu = () => {
                   <Form.Control
                     type="text"
                     value={newUser.profession}
-                    onChange={(e) => setNewUser({ ...newUser, profession: e.target.value })}
+                    onChange={(e) =>
+                      setNewUser({ ...newUser, profession: e.target.value })
+                    }
                     placeholder="Enter Profession"
                   />
                 </Form.Group>
@@ -200,38 +240,39 @@ const Menu = () => {
                   <Form.Label>Sport Interest Rate</Form.Label>
                   <Form.Select
                     value={newUser.interestRate}
-                    onChange={(e) => setNewUser({ ...newUser, interestRate: e.target.value })}
+                    onChange={(e) =>
+                      setNewUser({ ...newUser, interestRate: e.target.value })
+                    }
                   >
                     <option value="">Select</option>
-                    {rates.map((val, index) => (
-                      <option key={index} value={val}>
-                        {val}
-                      </option>
-                    ))}
+                    {rates.length
+                      ? rates.map((val, index) => (
+                          <option key={index} value={val}>
+                            {val}
+                          </option>
+                        ))
+                      : null}
                   </Form.Select>
                 </Form.Group>
               </Modal.Body>
               <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                    Close
+                <Button variant="secondary" onClick={handleClose}>
+                  Close
+                </Button>
+                {editing === true ? (
+                  <Button variant="primary" type="submit" onClick={handleClose}>
+                    Update
                   </Button>
-                  {editing ? (
-                    <Button variant="primary" type="submit">
-                      Update
-                    </Button>
-                  ) : (
-                    <Button variant="primary" type="submit" disabled={!newUser.name}>
-                      Submit
-                    </Button>
-                  )}
-                </Modal.Footer>
-              </Form>
-            </Modal>
-          </Col>
-        </Row>
-      </Container>
-    );
-  };
-
-  export default Menu;
-
+                ) : (
+                  <Button variant="primary" disabled={!newUser.name} type="submit" onClick={handleClose}>
+                    Submit
+                  </Button>
+                )}
+              </Modal.Footer>
+            </Form>
+          </Modal>
+        </Col>
+      </Row>
+    </Container>
+  );
+};

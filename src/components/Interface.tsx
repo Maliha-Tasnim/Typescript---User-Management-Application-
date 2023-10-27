@@ -1,8 +1,10 @@
-export interface User {
-  id: number;
+export interface BaseUser {
   name: string;
   address: string;
-  age: string; // Updated to number
+  age:  string;
   profession: string;
-  interestRate: string; // Updated to number
+  interestRate: string
+}
+export interface User extends BaseUser {
+  id: number;
 }
